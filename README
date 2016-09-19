@@ -6,3 +6,8 @@ ecwid_platform.php: contains platform-specific functions. They are to be redefin
 ecwid_misc.php: other functions
 run.php: the code that actually runs the processing. Since the original script produced its output into php variables, we also need that run code
 build.php: compiles all files into one. php build.php > ecwid_ajax_indexing.php produces a compiled file with that name
+
+---
+##history
+
+* branch dev-v3 - convert to use ecwid API v3 ahead of v1 API removal in Feb 2017

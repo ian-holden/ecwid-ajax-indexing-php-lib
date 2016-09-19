@@ -3,7 +3,7 @@
 $ecwid_html_index = $ecwid_title = '';
 
 if (isset($_GET['_escaped_fragment_'])) {
-    $catalog = new EcwidCatalog($ecwid_store_id, ecwid_page_url());
+    $catalog = new EcwidCatalog($ecwid_store_id, ecwid_page_url(), $ecwid_token);
 
     $params = $catalog->parse_escaped_fragment($_GET['_escaped_fragment_']);
 

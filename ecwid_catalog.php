@@ -5,25 +5,25 @@ class EcwidCatalog
 	var $store_id = 0;
 	var $store_base_url = '';
 	var $ecwid_api = null;
+	var $ecwid_token = null;
+	var $profile=null;
 
-	public function __construct($store_id, $store_base_url)
+	public function __construct($store_id, $store_base_url, $token)
 	{
 		$this->store_id = intval($store_id);
-		$this->store_base_url = $store_base_url;	
-		$this->ecwid_api = new EcwidProductApi($this->store_id);
+		$this->store_base_url = $store_base_url;
+		$this->ecwid_token = $token;
+		$this->ecwid_api = new EcwidProductApi($this->store_id, $this->ecwid_token);
+
+		$this->profile = $this->ecwid_api->get_profile($this->store_id);
+
 	}
 
 	public function get_product($id)
 	{
-		$params = array 
-		(
-			array("alias" => "p", "action" => "product", "params" => array("id" => $id)),
-			array("alias" => "pf", "action" => "profile")
-		);
 
-		$batch_result = $this->ecwid_api->get_batch_request($params);
-		$product = $batch_result["p"];
-		$profile = $batch_result["pf"];
+		$profile = $this->profile;
+		$product=$this->ecwid_api->get_product($id);
 
 		$return = $this->_l('');
 		
@@ -61,7 +61,7 @@ class EcwidCatalog
 			$return .= $this->_l('<div class="ecwid_catalog_product_price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">', 1);
 			$return .=  $this->_l(EcwidPlatform::get_price_label() . ': <span itemprop="price">' . EcwidPlatform::esc_html($product["price"]) . '</span>');
 
-			$return .= $this->_l('<span itemprop="priceCurrency">' . EcwidPlatform::esc_html($profile['currency']) . '</span>');
+			$return .= $this->_l('<span itemprop="priceCurrency">' . EcwidPlatform::esc_html($profile['formatsAndUnits']['currency']) . '</span>');
 			if (!isset($product['quantity']) || (isset($product['quantity']) && $product['quantity'] > 0)) {
 				$return .= $this->_l('<link itemprop="availability" href="http://schema.org/InStock" />In stock');
 			}
@@ -184,22 +184,14 @@ class EcwidCatalog
 
 	public function get_category($id)
 	{
-		$params = array
-		(
-			array("alias" => "c", "action" => "categories", "params" => array("parent" => $id)),
-			array("alias" => "p", "action" => "products", "params" => array("category" => $id)),
-			array("alias" => "pf", "action" => "profile")
-		);
+		$category=null;
 		if ($id > 0) {
-			$params[] = array('alias' => 'category', "action" => "category", "params" => array("id" => $id));
+			$category=$this->ecwid_api->get_category($id);
 		}
+		$categories=$this->ecwid_api->get_subcategories_by_id($id);
+		$products=$this->ecwid_api->get_products_by_category_id($id);
+		$profile = $this->profile;
 
-		$batch_result = $this->ecwid_api->get_batch_request($params);
-
-		$category	 = $id > 0 ? $batch_result['category'] : null;
-		$categories = $batch_result["c"];
-		$products   = $batch_result["p"];
-		$profile	= $batch_result["pf"];
 
 		$return = $this->_l('');
 
@@ -229,7 +221,7 @@ class EcwidCatalog
 				$product_url = $this->get_product_url($product);
 
 				$product_name = $product['name'];
-				$product_price = $product['price'] . ' ' . $profile['currency'];
+				$product_price = $product['price'] . ' ' . $profile['formatsAndUnits']['currency'];
 				$return .= $this->_l('<div>', 1);
 				$return .= $this->_l('<span class="ecwid_product_name">', 1);
 				$return .= $this->_l('<a href="' . EcwidPlatform::esc_attr($product_url) . '">' . EcwidPlatform::esc_html($product_name) . '</a>');
