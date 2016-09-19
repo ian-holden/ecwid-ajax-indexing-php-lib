@@ -1032,8 +1032,10 @@ class EcwidCatalog
 			}
 			
 			if(isset($product['defaultCategoryId']) && $product['defaultCategoryId'] > 0){
-				$ecwid_category_title = $this->get_category_title($product['defaultCategoryId']);
-				$return .= $this->_l('<div class="ecwid_catalog_product_category">' . EcwidPlatform::esc_html($ecwid_category_title) . '</div>');
+				list($default_category_name, $default_category_url) = $this->get_category_name_and_url($product['defaultCategoryId']);
+				$return .= $this->_l('<div class="ecwid_catalog_product_category">' 
+					. '<a href="' . EcwidPlatform::esc_attr($default_category_url) . '">'
+					. EcwidPlatform::esc_html($default_category_name) . '</a></div>');
 			}
 
 			$return .= $this->_l('<div class="ecwid_catalog_product_price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">', 1);
@@ -1245,6 +1247,24 @@ class EcwidCatalog
 		}
 
 		return $result;
+	}
+
+	public function get_category_name_and_url($id)
+	{
+		$category = $this->ecwid_api->get_category($id);
+
+		$name = '';
+		$url='';
+		if (is_array($category)) {
+			if (isset($category['name'])) { 
+				$name = $category['name'];
+			}
+			if (isset($category['url'])) { 
+				$url = $category['url'];
+			}
+		}
+
+		return array($name, $url);
 	}
 
 	public function get_product_title($id)
