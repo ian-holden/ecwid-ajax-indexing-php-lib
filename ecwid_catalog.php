@@ -260,25 +260,34 @@ class EcwidCatalog
 		return $return;
 	}
 
-	public function get_category_name($id)
+	public function get_category_title($id)
 	{
 		$category = $this->ecwid_api->get_category($id);
 
 		$result = '';
-		if (is_array($category) && isset($category['name'])) { 
-			$result = $category['name'];
+		if (is_array($category)) {
+			if (isset($category['seoTitle'])) { 
+				$result = $category['seoTitle'];
+			}
+			elseif (isset($category['name'])) { 
+					$result = $category['name'];
+			}
 		}
 
 		return $result;
 	}
 
-	public function get_product_name($id)
+	public function get_product_title($id)
 	{
 		$product = $this->ecwid_api->get_product($id);
-				
+
 		$result = '';
-		if (is_array($product) && isset($product['name'])) {
-			$result = $product['name'];
+		if (is_array($product)) {
+			if (isset($product['seoTitle'])) {
+				$result = $product['seoTitle'];
+			}elseif (isset($product['name'])){
+				$result = $product['name'];
+			}
 		}
 
 		return $result;
@@ -290,8 +299,12 @@ class EcwidCatalog
 			$category = $this->ecwid_api->get_category($id);
 
 			$result = '';
-			if (is_array($category) && isset($category['description'])) {
+			if (is_array($category)) {
+				if (isset($category['seoDescription'])) {
+					$result = $category['seoDescription'];
+				}elseif (isset($category['description'])) {
 					$result = $category['description'];
+				}
 			}
 
 			return $result;
@@ -302,8 +315,12 @@ class EcwidCatalog
 			$product = $this->ecwid_api->get_product($id);
 
 			$result = '';
-			if (is_array($product) && isset($product['description'])) {
+			if (is_array($product)) {
+				if (isset($product['seoDescription'])) {
+					$result = $product['seoDescription'];
+				}elseif (isset($product['description'])) {
 					$result = $product['description'];
+				}
 			}
 
 			return $result;
