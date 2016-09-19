@@ -934,7 +934,7 @@ class EcwidProductApi {
         }
 
         $api_url = $this->ECWID_PRODUCT_API_ENDPOINT . "/" . $this->store_id
-            . "/product?id=" . $product_id . '&token=' . $this->ECWID_TOKEN;
+            . "/products/" . $product_id . '?token=' . $this->ECWID_TOKEN;
         $cached[$product_id] = $this->process_request($api_url);
 
         return $cached[$product_id];
@@ -950,7 +950,7 @@ class EcwidProductApi {
             return $cached[$category_id];
         }
         $api_url = $this->ECWID_PRODUCT_API_ENDPOINT . "/" . $this->store_id
-            . "/category?id=" . $category_id . '&token=' . $this->ECWID_TOKEN;
+            . "/categories/" . $category_id . '?token=' . $this->ECWID_TOKEN;
         $cached[$category_id] = $this->process_request($api_url);
 
         return $cached[$category_id];
@@ -1226,13 +1226,11 @@ class EcwidCatalog
 		if (preg_match('/^(\/~\/)([a-z]+)\/(.*)$/', $fragment, $matches)) {
 			parse_str($matches[3], $return);
 			$return['mode'] = $matches[2];
-		} elseif (preg_match('!.*/(p|c)/([0-9]*)!', $fragment, $matches)) {
-			if (count($matches) == 3 && in_array($matches[1], array('p', 'c'))) {
-				$return  = array(
-					'mode' => 'p' == $matches[1] ? 'product' : 'category',
-					'id' => $matches[2]
-				);
-			}
+		} elseif (preg_match('!.*/(p|c)/([0-9]+)!', $fragment, $matches)) {
+			$return  = array(
+				'mode' => 'p' == $matches[1] ? 'product' : 'category',
+				'id' => $matches[2]
+			);
 		}
 
 		return $return;
@@ -1244,7 +1242,7 @@ class EcwidCatalog
 
 		$result = '';
 		if (is_array($category)) {
-			if (isset($category['seoTitle'])) { 
+			if (isset($category['seoTitle']) && $category['seoTitle'] != '') { 
 				$result = $category['seoTitle'];
 			}
 			elseif (isset($category['name'])) { 
@@ -1261,7 +1259,7 @@ class EcwidCatalog
 
 		$result = '';
 		if (is_array($product)) {
-			if (isset($product['seoTitle'])) {
+			if (isset($product['seoTitle']) && $product['seoTitle'] != '') {
 				$result = $product['seoTitle'];
 			}elseif (isset($product['name'])){
 				$result = $product['name'];
@@ -1278,7 +1276,7 @@ class EcwidCatalog
 
 			$result = '';
 			if (is_array($category)) {
-				if (isset($category['seoDescription'])) {
+				if (isset($category['seoDescription']) && $category['seoDescription'] != '') {
 					$result = $category['seoDescription'];
 				}elseif (isset($category['description'])) {
 					$result = $category['description'];
@@ -1294,7 +1292,7 @@ class EcwidCatalog
 
 			$result = '';
 			if (is_array($product)) {
-				if (isset($product['seoDescription'])) {
+				if (isset($product['seoDescription']) && $product['seoDescription'] != '') {
 					$result = $product['seoDescription'];
 				}elseif (isset($product['description'])) {
 					$result = $product['description'];

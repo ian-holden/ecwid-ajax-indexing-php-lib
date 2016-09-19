@@ -128,7 +128,7 @@ class EcwidProductApi {
         }
 
         $api_url = $this->ECWID_PRODUCT_API_ENDPOINT . "/" . $this->store_id
-            . "/product?id=" . $product_id . '&token=' . $this->ECWID_TOKEN;
+            . "/products/" . $product_id . '?token=' . $this->ECWID_TOKEN;
         $cached[$product_id] = $this->process_request($api_url);
 
         return $cached[$product_id];
@@ -144,7 +144,7 @@ class EcwidProductApi {
             return $cached[$category_id];
         }
         $api_url = $this->ECWID_PRODUCT_API_ENDPOINT . "/" . $this->store_id
-            . "/category?id=" . $category_id . '&token=' . $this->ECWID_TOKEN;
+            . "/categories/" . $category_id . '?token=' . $this->ECWID_TOKEN;
         $cached[$category_id] = $this->process_request($api_url);
 
         return $cached[$category_id];
