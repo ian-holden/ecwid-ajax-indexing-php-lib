@@ -53,17 +53,11 @@ class EcwidCatalog
 				$return .= $this->_l('</div>', -1);
 			}
 			
-			if(is_array($product["categories"]))
-			{
-				foreach ($product["categories"] as $ecwid_category) 
-				{
-					if($ecwid_category["defaultCategory"] == true)
-					{
-						$return .= $this->_l('<div class="ecwid_catalog_product_category">' . EcwidPlatform::esc_html($ecwid_category['name']) . '</div>');
-					}
-				}
+			if(isset($product['defaultCategoryId']) && $product['defaultCategoryId'] > 0){
+				$ecwid_category_title = $this->get_category_title($product['defaultCategoryId']);
+				$return .= $this->_l('<div class="ecwid_catalog_product_category">' . EcwidPlatform::esc_html($ecwid_category_title) . '</div>');
 			}
-			
+
 			$return .= $this->_l('<div class="ecwid_catalog_product_price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">', 1);
 			$return .=  $this->_l(EcwidPlatform::get_price_label() . ': <span itemprop="price">' . EcwidPlatform::esc_html($product["price"]) . '</span>');
 
