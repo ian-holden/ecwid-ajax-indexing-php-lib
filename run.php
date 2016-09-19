@@ -3,7 +3,7 @@
 $ecwid_html_index = $ecwid_title = '';
 
 if (isset($_GET['_escaped_fragment_'])) {
-    $catalog = new EcwidCatalog($ecwid_store_id, ecwid_page_url());
+    $catalog = new EcwidCatalog($ecwid_store_id, ecwid_page_url(), $ecwid_token);
 
     $params = $catalog->parse_escaped_fragment($_GET['_escaped_fragment_']);
 
@@ -11,13 +11,13 @@ if (isset($_GET['_escaped_fragment_'])) {
      
         if ($params['mode'] == 'product') {
             $ecwid_html_index  = $catalog->get_product($params['id']);
-            $ecwid_title       = $catalog->get_product_name($params['id']);
+            $ecwid_title       = $catalog->get_product_title($params['id']);
             $ecwid_description = $catalog->get_product_description($params['id']);
             $ecwid_canonical   = $catalog->get_product_url($params['id']);
 
         } elseif ($params['mode'] == 'category') {
             $ecwid_html_index  = $catalog->get_category($params['id']);
-            $ecwid_title       = $catalog->get_category_name($params['id']);
+            $ecwid_title       = $catalog->get_category_title($params['id']);
             $ecwid_description = $catalog->get_category_description($params['id']);
             $ecwid_canonical   = $catalog->get_category_url($params['id']);
         }

@@ -2,6 +2,7 @@
     <head>
         <?php 
             $ecwid_store_id = 1003;
+            $ecwid_token='public_YourPublicOrPrivateAccessTokenHere';
             include_once "ecwid_ajax_indexing.php";
             if (!isset($_GET['_escaped_fragment_'])) {
               echo '<meta name="fragment" content="!" />';
@@ -34,9 +35,9 @@
 
     </head>
     <body>
-        <div id="my-store-1003"></div>
+        <div id="my-store-1003/div>
         <div>
-        <script type="text/javascript" src="http://app.ecwid.com/script.js?1003" charset="utf-8"></script><script type="text/javascript"> xProductBrowser("categoriesPerRow=3","views=grid(3,3) list(10) table(20)","categoryView=grid","searchView=list","id=my-store-1003");</script>
+        <script type="text/javascript" src="//app.ecwid.com/script.js?1003harset="utf-8"></script><script type="text/javascript"> xProductBrowser("categoriesPerRow=3","views=grid(3,3) list(10) table(20)","categoryView=grid","searchView=list","id=my-store-1003");</script>
 
         <?php
             if ($ecwid_html_index) {
