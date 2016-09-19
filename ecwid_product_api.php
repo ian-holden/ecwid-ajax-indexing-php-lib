@@ -19,6 +19,12 @@ class EcwidProductApi {
         $this->ECWID_TOKEN = $token;
     }
 
+    function EcwidProductApi($store_id, $token) {
+        if(version_compare(PHP_VERSION,"5.0.0","<")) {
+          $this->__construct($store_id, $token);
+        }
+    }
+
     function process_request($url) {
 
         $result = false;
@@ -28,7 +34,15 @@ class EcwidProductApi {
             $this->error = '';
             $this->error_code = '';
             $json = $fetch_result['data'];
-            $result = json_decode($json, true);
+
+            # decode the json using php builtin service, or our parser on older php versions
+            if(version_compare(PHP_VERSION,"5.2.0",">=")) {
+                $result = json_decode($json, true);
+            }else{
+                $json_parser = new Services_JSON(SERVICES_JSON_LOOSE_TYPE);
+                $result = $json_parser->decode($json);
+            }
+
         } else {
             $this->error = $fetch_result['data'];
             $this->error_code = $fetch_result['code'];

@@ -19,6 +19,12 @@ class EcwidCatalog
 
 	}
 
+	function EcwidCatalog($store_id, $store_base_url, $token)
+	{
+		if(version_compare(PHP_VERSION,"5.0.0","<"))
+		$this->__construct($store_id, $store_base_url, $token);
+	}
+
 	public function get_product($id)
 	{
 
