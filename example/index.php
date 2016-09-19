@@ -2,7 +2,7 @@
     <head>
         <?php 
             $ecwid_store_id = 1003;
-            $ecwid_token='public_YourPublicOrSecretAppTokenHere';
+            $ecwid_token='public_YourPublicOrPrivateAccessTokenHere';
             include_once "ecwid_ajax_indexing.php";
             if (!isset($_GET['_escaped_fragment_'])) {
               echo '<meta name="fragment" content="!" />';
