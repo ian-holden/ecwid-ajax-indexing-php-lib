@@ -872,10 +872,12 @@ class EcwidProductApi {
             $offset=$result['offset'];
             $items=$result['items'];
 
-            foreach($items as $item){
-               array_push($all_items, $item);
+            if(is_array($items){
+                foreach($items as $item){
+                   array_push($all_items, $item);
+                }
             }
-
+            
             $offset+=$count;
 
             if($offset < $total){
@@ -1031,17 +1033,13 @@ class EcwidCatalog
 				$return .= $this->_l('</div>', -1);
 			}
 			
-			if(is_array($product["categories"]))
-			{
-				foreach ($product["categories"] as $ecwid_category) 
-				{
-					if($ecwid_category["defaultCategory"] == true)
-					{
-						$return .= $this->_l('<div class="ecwid_catalog_product_category">' . EcwidPlatform::esc_html($ecwid_category['name']) . '</div>');
-					}
-				}
+			if(isset($product['defaultCategoryId']) && $product['defaultCategoryId'] > 0){
+				list($default_category_name, $default_category_url) = $this->get_category_name_and_url($product['defaultCategoryId']);
+				$return .= $this->_l('<div class="ecwid_catalog_product_category">' 
+					. '<a href="' . EcwidPlatform::esc_attr($default_category_url) . '">'
+					. EcwidPlatform::esc_html($default_category_name) . '</a></div>');
 			}
-			
+
 			$return .= $this->_l('<div class="ecwid_catalog_product_price" itemprop="offers" itemscope itemtype="http://schema.org/Offer">', 1);
 			$return .=  $this->_l(EcwidPlatform::get_price_label() . ': <span itemprop="price">' . EcwidPlatform::esc_html($product["price"]) . '</span>');
 
@@ -1251,6 +1249,24 @@ class EcwidCatalog
 		}
 
 		return $result;
+	}
+
+	public function get_category_name_and_url($id)
+	{
+		$category = $this->ecwid_api->get_category($id);
+
+		$name = '';
+		$url='';
+		if (is_array($category)) {
+			if (isset($category['name'])) { 
+				$name = $category['name'];
+			}
+			if (isset($category['url'])) { 
+				$url = $category['url'];
+			}
+		}
+
+		return array($name, $url);
 	}
 
 	public function get_product_title($id)
