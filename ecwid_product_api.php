@@ -66,10 +66,12 @@ class EcwidProductApi {
             $offset=$result['offset'];
             $items=$result['items'];
 
-            foreach($items as $item){
-               array_push($all_items, $item);
+            if(is_array($items){
+                foreach($items as $item){
+                   array_push($all_items, $item);
+                }
             }
-
+            
             $offset+=$count;
 
             if($offset < $total){
