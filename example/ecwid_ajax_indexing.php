@@ -872,7 +872,7 @@ class EcwidProductApi {
             $offset=$result['offset'];
             $items=$result['items'];
 
-            if(is_array($items){
+            if(is_array($items)){
                 foreach($items as $item){
                    array_push($all_items, $item);
                 }
@@ -1400,7 +1400,7 @@ class EcwidPlatform {
             );
         }
 
-        $headers[] = 'Content-Type: application/x-www-form-urlencoded';
+        $headers[] = 'Content-Type: application/json';
         $ch = curl_init();
 
         curl_setopt($ch, CURLOPT_URL, $url);
